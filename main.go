@@ -7,10 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	// "k8s.io/client-go/tools/clientcmd"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -33,6 +32,7 @@ func main() {
 		for _, namespace := range namespace_list.Items {
 			killed_pods := 0
 
+			// exclude mode
 			if val, ok := namespace.Labels[ignorelifetimeLabel]; ok {
 				if val == "true" {
 					fmt.Printf("%+v\n", namespace.Name)
@@ -47,7 +47,9 @@ func main() {
 			}
 
 			for _, pod := range pod_list.Items {
-				// fmt.Println("considering: namespace", namespace.Name, "pod", pod.Name)
+				if isDebug() {
+					fmt.Println("considering: namespace", namespace.Name, "pod", pod.Name)
+				}
 				if val, ok := pod.Labels[lifetimeLabel]; ok {
 					lifetime := time.Second
 					minutes, err := strconv.Atoi(val)
@@ -59,24 +61,28 @@ func main() {
 					}
 
 					if lifetime == 0 {
-						fmt.Printf("namespace %s pod %s : provided value %s is incorrect\n", namespace.Name, pod.Name, val)
+						fmt.Printf("skipping Pod: namespace %s pod %s : provided value %s is incorrect\n", namespace.Name, pod.Name, val)
 					} else if pod.Status.Phase == "Running" {
-						fmt.Println("namespace", namespace.Name, "pod", pod.Name, "is running")
-						// show start time
-						fmt.Println("start time", pod.Status.StartTime)
-						fmt.Println("kill time", pod.Status.StartTime.Add(lifetime))
+
+						if isDebug() {
+							fmt.Println("namespace", namespace.Name, "pod", pod.Name, "is running")
+							fmt.Println("start time", pod.Status.StartTime)
+							fmt.Println("kill time", pod.Status.StartTime.Add(lifetime))
+						}
+
 						if pod.Status.StartTime.Add(lifetime).Before(time.Now()) {
 							if maxKilledPods() > 0 && killed_pods < maxKilledPods() {
 								// kill pod
 								err := clientset.CoreV1().Pods(namespace.Name).Delete(ctx, pod.Name, metav1.DeleteOptions{})
 								if err != nil {
-									fmt.Printf("namespace %s pod %s : %s\n", namespace.Name, pod.Name, err.Error())
+									fmt.Printf("ERROR killing Pod: namespace %s pod %s : %s\n", namespace.Name, pod.Name, err.Error())
 								} else {
-									fmt.Printf("namespace %s KILLED pod %s\n", namespace.Name, pod.Name)
+									fmt.Printf("Pod KILLED: namespace %s pod %s\n", namespace.Name, pod.Name)
 									killed_pods++
 								}
 							} else {
-								fmt.Printf("namespace %s: max killed pods reached %d\n", namespace.Name, maxKilledPods())
+								fmt.Printf("skipping Pods for namespace %s: max killed pods reached %d\n", namespace.Name, maxKilledPods())
+								break
 							}
 						}
 					}
@@ -108,4 +114,12 @@ func maxKilledPods() int {
 		return s
 	}
 	return 5
+}
+
+func isDebug() bool {
+	if h := os.Getenv("DEBUG"); h != "" {
+		s, _ := strconv.Atoi(h)
+		return s > 0
+	}
+	return false
 }
