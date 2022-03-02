@@ -64,8 +64,7 @@ jobs:
       - name: Update chart.yaml
         run: |
           sed 's/^appVersion: "[^"]*"/appVersion: "${{ steps.vars.outputs.tag }}"/' -i ./charts/bestby/Chart.yaml
-          sed 's/^version: "[^"]*"/appVersion: "${{ steps.vars.outputs.tag }}"/' -i ./charts/bestby/Chart.yaml
-          sed 's/^  tag: "[^"]*"/  tag: "${{ steps.vars.outputs.tag }}"/' -i ./charts/bestby/values.yaml
+          sed 's/^version: "[^"]*"/version: "${{ steps.vars.outputs.tag }}"/' -i ./charts/bestby/Chart.yaml
 
       # push changes
 
