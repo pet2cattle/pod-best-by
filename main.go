@@ -94,7 +94,7 @@ func main() {
 			break
 		}
 
-		fmt.Printf("Now sleeping for %d seconds", int(sleepDuration().Seconds()))
+		fmt.Printf("sleeping for %d seconds\n", int(sleepDuration().Seconds()))
 		time.Sleep(sleepDuration())
 
 	}

@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GO111MODULE=on go build 
 # container
 FROM alpine:3.12.3
 
-RUN adduser -D nonroot
+RUN adduser -u 1000 -D nonroot
 
 WORKDIR /
 COPY --from=builder /workspace/best-by .
