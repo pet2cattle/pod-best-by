@@ -1,6 +1,0 @@
-
-Application installed on the {{ .Release.Namespace }} namespace
-
-It's fullname is: {{ include "bestby.fullname" . }}
-
-You can identify it's Pods using this lable: "app.kubernetes.io/name={{ include "bestby.name" . }}"
