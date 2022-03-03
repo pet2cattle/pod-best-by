@@ -50,16 +50,23 @@ func main() {
 
 	log.Info("initializing shelf-stocker")
 
+	if useAnnotations() {
+		log.Info("using annotations")
+	} else {
+		log.Info("using labels")
+	}
+
 	for {
 		for _, namespace := range namespace_list.Items {
 			killed_pods := 0
 
 			// exclude mode
-			if val, ok := namespace.Annotations[ignorelifetime]; ok {
-				if val == "true" {
-					log.Debugf("found ignorelifetime: skipping namespace %+v\n", namespace.Name)
-					continue
-				}
+			if useAnnotations() && namespace.Annotations[ignorelifetime] == "true" {
+				log.Debugf("found ignorelifetime: skipping namespace %+v\n", namespace.Name)
+				continue
+			} else if !useAnnotations() && namespace.Labels[ignorelifetime] == "true" {
+				log.Debugf("found ignorelifetime: skipping namespace %+v\n", namespace.Name)
+				continue
 			}
 
 			// process Pods
@@ -72,7 +79,16 @@ func main() {
 
 				log.Debugf("considering: namespace %s Pod %s", namespace.Name, pod.Name)
 
-				if val, ok := pod.Annotations[lifetime]; ok {
+				var val string
+				var ok bool
+
+				if useAnnotations() {
+					val, ok = pod.Annotations[lifetime]
+				} else {
+					val, ok = pod.Labels[lifetime]
+				}
+
+				if ok {
 					lifetime := time.Second
 					minutes, err := strconv.Atoi(val)
 
@@ -138,6 +154,14 @@ func maxKilledPods() int {
 
 func isDebug() bool {
 	if h := os.Getenv("DEBUG"); h != "" {
+		s, _ := strconv.Atoi(h)
+		return s > 0
+	}
+	return false
+}
+
+func useAnnotations() bool {
+	if h := os.Getenv("ANNOTATIONS"); h != "" {
 		s, _ := strconv.Atoi(h)
 		return s > 0
 	}
