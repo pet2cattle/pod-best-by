@@ -2,14 +2,15 @@
 
 ## Installing the Chart
 
-Before you can install the chart you will need to add the `stevehipwell` repo to [Helm](https://helm.sh/).
+Before you can install the chart you will need to add the `bestby` repo to [Helm](https://helm.sh/).
 
 ```shell
-helm repo add pet2cattle https://pet2cattle.github.io/pod-best-by/
+helm repo add bestby https://pet2cattle.github.io/pod-best-by/
+helm repo update
 ```
 
 After you've installed the repo you can install the chart:
 
 ```shell
-helm upgrade --install --namespace default bestby pet2cattle/bestby
+helm install -n bestby --create-namespace bestby bestby/bestby
 ```
