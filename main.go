@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	lifetimeLabel       string = "pod.kubernetes.io/lifetime"
-	ignorelifetimeLabel string = "pod.kubernetes.io/ignore-lifetime"
+	lifetime       string = "pod.kubernetes.io/lifetime"
+	ignorelifetime string = "pod.kubernetes.io/ignore-lifetime"
 )
 
 var log = logging.MustGetLogger("shelf-stocker")
@@ -55,9 +55,9 @@ func main() {
 			killed_pods := 0
 
 			// exclude mode
-			if val, ok := namespace.Labels[ignorelifetimeLabel]; ok {
+			if val, ok := namespace.Annotations[ignorelifetime]; ok {
 				if val == "true" {
-					log.Debugf("found ignorelifetimeLabel: skipping namespace %+v\n", namespace.Name)
+					log.Debugf("found ignorelifetime: skipping namespace %+v\n", namespace.Name)
 					continue
 				}
 			}
@@ -72,7 +72,7 @@ func main() {
 
 				log.Debugf("considering: namespace %s Pod %s", namespace.Name, pod.Name)
 
-				if val, ok := pod.Labels[lifetimeLabel]; ok {
+				if val, ok := pod.Annotations[lifetime]; ok {
 					lifetime := time.Second
 					minutes, err := strconv.Atoi(val)
 
