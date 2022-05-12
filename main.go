@@ -22,7 +22,7 @@ const (
 var log = logging.MustGetLogger("shelf-stocker")
 
 var format = logging.MustStringFormatter(
-	`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s}%{color:reset} %{message}`,
+	`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.5s}%{color:reset} %{message}`,
 )
 
 func main() {

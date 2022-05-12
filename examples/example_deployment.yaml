@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: deploy-test
+  template:
+    metadata:
+      labels:
+        component: deploy-test
+        pod.kubernetes.io/lifetime: 2m
+    spec:
+      containers:
+      - name: demo-container
+        image: "alpine:latest"
+        command:
+        - sleep
+        - '24h'
