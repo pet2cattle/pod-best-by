@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   bestby:
   - apiVersion: v2
+    appVersion: 0.1.10
+    created: "2022-06-20T16:42:42.325411906Z"
+    description: Automatic shelf filler for Pods
+    digest: c9c5d3ac48a68d56f8d27a543706ee8fb2627c9601dad0a18c4980b4cb459d84
+    name: bestby
+    type: application
+    urls:
+    - https://github.com/pet2cattle/pod-best-by/releases/download/bestby-0.1.10/bestby-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
     appVersion: 0.1.9
     created: "2022-05-28T21:36:41.28693395Z"
     description: Automatic shelf filler for Pods
@@ -71,4 +81,4 @@ entries:
     urls:
     - https://github.com/pet2cattle/pod-best-by/releases/download/bestby-0.1.3/bestby-0.1.3.tgz
     version: 0.1.3
-generated: "2022-05-28T21:36:41.28695865Z"
+generated: "2022-06-20T16:42:42.325445506Z"
