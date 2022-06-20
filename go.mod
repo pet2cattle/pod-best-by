@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	k8s.io/apimachinery v0.24.1
+	k8s.io/apimachinery v0.24.2
 	k8s.io/client-go v0.24.1
 	sigs.k8s.io/controller-runtime v0.12.1
 )
