@@ -6,7 +6,7 @@ require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	k8s.io/apimachinery v0.26.2
 	k8s.io/client-go v0.26.2
-	sigs.k8s.io/controller-runtime v0.14.4
+	sigs.k8s.io/controller-runtime v0.14.5
 )
 
 require (
